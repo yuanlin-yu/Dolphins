@@ -1,0 +1,78 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 180px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+h2 {
+    margin: 0px;
+    margin-top: 10px;
+}
+
+div{
+    margin: 5px;
+}
+
+#title {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 -10px 0;
+}
+
+#title p {
+    margin: 0px;
+    font-size: 16px;
+}
+
+img {
+    height: 50px;
+    margin: 15px;
+}
+
+#author {
+    color: gray;
+    margin: 15px 0 0 0;
+    font-style: italic;
+    font-size: 12px;
+    text-align: right;
+    width: 220px;
+}
+
+.inline {
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+    height: 28px;
+    width: 150px;
+    border-radius: 5px;
+    background-color: rgb(30, 100, 240);
+    color: white;
+    border: none;
+    margin: 15px;
+    cursor: pointer;
+}
+
+#aiBarNum input {
+    width: 40px;
+    text-align: center;
+}
+
+#setting {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 30px;
+    margin: 0;
+}
