@@ -72,7 +72,8 @@ var messageStyle = {
     borderRadius: '2px',
     margin: '2px',
     padding: '2px',
-    width: '95%'
+    width: '95%',
+    overflowWrap: 'break-word'
 }
 
 var messageTimeStyle = {
@@ -266,10 +267,10 @@ export const notes = () => {
     clearAndRecordBtn.appendChild(recordBtn);
     btnContainter.appendChild(clearAndRecordBtn);
 
-    input.placeholder = '粘贴网页内容与此处或输入文本...';
+    input.placeholder = '粘贴网页内容于此处或输入文本...';
     recordBtn.innerText = '记录';
     clearBtn.innerText = '清空';
-    syncBtnText.textContent = '*Alt+Q 清空动态选取输入信息;Alt+A 刷新选图模式;';
+    syncBtnText.textContent = '*Alt+Q清空动态信息;Alt+A刷新选图/获取链接;';
     syncBtnText.classList.add('dolphinsText');
     syncBtn.appendChild(syncBtnText);
     outputBtn.innerText = '导出';

@@ -2,14 +2,15 @@
 	"manifest_version": 3,
 	"name": "dolphins",
 	"version": "1.0.0",
-	"description": "",
+	"description": "多功能综合AI助手",
 	"author": "yuanlin-yu",
+	"icons":
+	{
+		"48": "icon.png",
+		"128": "icon.png"
+	},
 	"action":
 	{
-		"default_icon": {
-			"48": "icon.png",
-			"128": "icon.png"
-		},
 		"default_popup": "popup.html"
 	},
 	"permissions": [

@@ -239,7 +239,23 @@ style.innerText = `
     margin: 2px;
 }
 
-.imgSelectBtn:hover, .copyBtn:hover {
+.linksSelectBtn {
+    z-index: 25;
+    width: 20px;
+    height: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 2px;
+    border: none;
+    background-color: rgb(30, 100, 240);
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    margin: 2px;
+}
+
+.imgSelectBtn:hover, .linksSelectBtn:hover, .copyBtn:hover {
     background-color: red;
 }
 
@@ -294,7 +310,7 @@ style.innerText = `
     outline: none;
 }
 
-#imgSelectNotesButton .tooltiptext {
+#imgSelectNotesButton .tooltiptext, #linksSelectNotesButton .tooltiptext {
     width: 120px;
     background-color: white;
     color: black;
@@ -308,7 +324,7 @@ style.innerText = `
     position: absolute;
   }
   
-#imgSelectNotesButton:hover .tooltiptext {
+#imgSelectNotesButton:hover .tooltiptext, #linksSelectNotesButton:hover .tooltiptext {
     opacity: 1;
 }
 

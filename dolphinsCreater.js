@@ -342,10 +342,16 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
 
         //刷新获取图片功能
         if (event.altKey && (event.key === 'a' || event.key === 'A')) {
-            if(imgSelectNotes.childNodes[0].checked) {
+            if(isSelectImgMode) {
                 removeImgeSelectFunction();
                 imageSelectFunction();
             }
+
+            if(isSelectLinksMode) {
+                removeLinksSelectFunction();
+                linksSelectFunction();
+            }
+
             event.preventDefault();
         }   
 
@@ -983,7 +989,7 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
         overflow: 'hidden'
     }
     Object.assign(notesHeader.style, notesHeaderStyle);
-    notesHeader.innerHTML = `<div style="width: 180px;margin: 10px 0 0 10px;display: flex;flex-direction: row; align-items: center; ">  
+    notesHeader.innerHTML = `<div style="width: 140px;margin: 10px 0 0 10px;display: flex;flex-direction: row; align-items: center; ">  
         <img class="dolphinsImgs" src=${imgs.logo.notes} style="height: 30px; margin: 5px;">
         <p style="text-align: left;"><strong> Dolphins 笔记<s/trong></p>    
     </div>`;
@@ -1021,7 +1027,7 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
             isSelectMode = false;
             clipboardContent = '';
             copyBtn.style.display = 'none';
-            if(imgSelectNotes.childNodes[0].checked === false) {
+            if(!isSelectImgMode && !isSelectLinksMode) {
                 cancelSyncClipboard(notesApp.content);
                 isSyncClipboard = false;
             }
@@ -1084,7 +1090,7 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
 
             btns[i].addEventListener('contextmenu', function(event) {    
                 convertUrlToBase64(imgs[event.target.id].src,  (base64data) => {
-                    selectImgs = `<img width="250" src=${base64data}>`;            
+                    selectImgs = `<img width="500" src=${base64data}>`;            
                     lastClipboardContent = clipboardContent;
                     clipboardContent += selectImgs;
                     syncClipboard(clipboardContent, notesApp.content, isSyncClipboard);;  
@@ -1120,7 +1126,7 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
             removeImgeSelectFunction();
             selectImgs = '';
             clipboardContent = '';
-            if(textSelectNotes.childNodes[0].checked === false) {
+            if(!isSelectMode && !isSelectLinksMode ) {
                 cancelSyncClipboard(notesApp.content);;
                 isSyncClipboard = false;
             }
@@ -1132,7 +1138,7 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
             imgSelectNotes.style.fontWeight = 'normal';
         }
     };
-    
+
     const imgSelectNotes = createFunctionButton('选图模式', 'checkbox', () => toggleSelectImgModeNotes('checkbox'));
     imgSelectNotes.style.color = 'gray';
     imgSelectNotes.style.cursor = 'pointer';
@@ -1146,16 +1152,100 @@ export const createBar = (id, apps = [], initialPosition = {top: '150px', right:
     topTipText.innerText = "开启后右键点击图片左上角按钮选取图片";
     imgSelectNotes.appendChild(topTipText);
 
-    getPageContextNotes.style.margin = '10px 5px 0 5px';
+    //获取链接
+    var linksBtn = [];
+    var selectLinks = '';
+
+    const linksSelectFunction = () => {
+        linksBtn = [];
+        const links = document.querySelectorAll('a');
+        for(var i=0; i<links.length-1; i++) {
+            let btn = document.createElement('button');
+            linksBtn.push(btn);
+            linksBtn[i].classList.add('linksSelectBtn');
+            linksBtn[i].id = i;
+            linksBtn[i].innerText = '@';
+            linksBtn[i].style.zIndex = '5';
+            linksBtn[i].style.cursor = 'crosshair';
+
+            links[i].parentNode.appendChild(btn);
+            links[i].parentNode.style.overflow = 'visible';  
+            // links[i].parentNode.style.position = 'relative';    
+
+            linksBtn[i].addEventListener('contextmenu', function(event) {    
+                selectLinks = `<a href="${links[event.target.id].href}"><p>${links[event.target.id].href}</p></a>`;
+                lastClipboardContent = clipboardContent;
+                clipboardContent += '\n' + selectLinks + '\n';
+                syncClipboard(clipboardContent, notesApp.content, isSyncClipboard);
+
+                //禁止右键菜单
+                event.preventDefault(); 
+                event.stopPropagation();
+                return false;
+            })
+        }
+    }
+
+    const removeLinksSelectFunction = () => {
+        document.body.querySelectorAll('button[class="linksSelectBtn"]').forEach(btn => {
+            btn.remove();
+        });
+        linksBtn = [];
+    }
+
+    var isSelectLinksMode = false;
+    const toggleSelectLinksModeNotes = () => {   
+        if(!isSelectLinksMode) {
+            isSyncClipboard = true;
+            isSelectLinksMode = true;
+            linksSelectFunction();
+            linksSelectNotes.style.backgroundColor = 'var(--main-color)';
+            linksSelectNotes.style.borderColor = 'black';
+            linksSelectNotes.style.color = 'white';
+            linksSelectNotes.style.fontWeight = 'bold';
+        } else {
+            removeLinksSelectFunction();
+            selectLinks = '';
+            clipboardContent = '';
+            if(!isSelectMode && !isSelectImgMode ) {
+                cancelSyncClipboard(notesApp.content);;
+                isSyncClipboard = false;
+            }
+            isSelectLinksMode = false;
+            linksSelectNotes.childNodes[0].checked = false;
+            linksSelectNotes.style.backgroundColor = 'white';
+            linksSelectNotes.style.borderColor = 'var(--main-color)';
+            linksSelectNotes.style.color = 'gray';
+            linksSelectNotes.style.fontWeight = 'normal';
+        }
+    };
+    
+    const linksSelectNotes = createFunctionButton('选取链接', 'checkbox', () => toggleSelectLinksModeNotes('checkbox'));
+    linksSelectNotes.style.color = 'gray';
+    linksSelectNotes.style.cursor = 'pointer';
+    linksSelectNotes.childNodes[1].style.cursor = 'pointer';
+    linksSelectNotes.childNodes[0].style.display = 'none';
+    linksSelectNotes.addEventListener('click', () => toggleSelectLinksModeNotes('button'));
+
+    linksSelectNotes.id = "linksSelectNotesButton";
+    const topTipTextLinks = document.createElement('span');
+    topTipTextLinks.classList.add('tooltiptext');
+    topTipTextLinks.innerText = "开启后右键点击图片右上角按钮选取链接";
+    linksSelectNotes.appendChild(topTipTextLinks);
+
+    getPageContextNotes.style.margin = '10px 2px 0 2px';
     getPageContextNotes.style.width = '80px';
     getPageContextNotes.innerText = '获取全文';
-    textSelectNotes.style.margin = '10px 5px 0 5px';
+    textSelectNotes.style.margin = '10px 2px 0 2px';
     textSelectNotes.style.width = '80px';
-    imgSelectNotes.style.margin = '10px 5px 0 5px';
+    linksSelectNotes.style.margin = '10px 2px 0 2px';
+    linksSelectNotes.style.width = '80px';
+    imgSelectNotes.style.margin = '10px 2px 0 2px';
     imgSelectNotes.style.width = '80px';
     notesHeader.appendChild(getPageContextNotes);
     notesHeader.appendChild(textSelectNotes);
     notesHeader.appendChild(imgSelectNotes);
+    notesHeader.appendChild(linksSelectNotes);
 
     //dragable setting
     header.onmousedown = function (e) {
